@@ -1,8 +1,7 @@
 CREATE TABLE "task" (
   "id" serial primary key,
-  "task" integer,
+  "task" varchar,
   "completed" true,
-  "delete" true,
 );
 
 INSERT INTO "task" 

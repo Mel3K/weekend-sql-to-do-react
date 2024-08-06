@@ -6,11 +6,11 @@ const pool = require('../modules/pool.js');
 
 router.get('/', (req, res) => {
     res.send(task);
-    // When the clients asks for the songs
+    // When the clients asks for the task
     // We need to reach out to the database for the songs
     // and then send them to the client.
 
-    // Write a query to get the songs
+    // Write a query to get the task
     // Often we write these in Postico, and we test them there
     // Then we copy them here, and turn them into strings.
     let queryText = 'SELECT * FROM "task";';
