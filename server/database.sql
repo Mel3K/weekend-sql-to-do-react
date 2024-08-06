@@ -1,11 +1,10 @@
-CREATE TABLE "Task" (
+CREATE TABLE "tasks" (
   "id" serial primary key,
-  "" integer,
-  "artist" varchar(80) not null,
-  "track" varchar(120) not null,
-  "published" date
+  "task" integer,
+  "completed" true,
+  "delete" true,
 );
 
-INSERT INTO "songs" 
-	("rank", "artist", "track", "published") 
+INSERT INTO "tasks" 
+	("id ", "artist", "track", "published") 
 VALUES

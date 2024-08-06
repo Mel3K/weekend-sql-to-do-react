@@ -5,7 +5,7 @@ const pool = require('../modules/pool.js');
 // GET
 
 router.get('/', (req, res) => {
-    res.send(songs);
+    res.send(task);
     // When the clients asks for the songs
     // We need to reach out to the database for the songs
     // and then send them to the client.
@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
     // Write a query to get the songs
     // Often we write these in Postico, and we test them there
     // Then we copy them here, and turn them into strings.
-    let queryText = 'SELECT * FROM "songs";';
+    let queryText = 'SELECT * FROM "task";';
 
     // Send that query to the DB (database)
     pool.query(queryText)
@@ -40,7 +40,7 @@ router.post('/', (req, res) => {
     // When the client sends us a new song
     // We want our server to send it to the database
 
-    const newSong = req.body;
+    const newTask = req.body;
 
     // I want to write a query to insert the new song into the database
 
@@ -48,10 +48,10 @@ router.post('/', (req, res) => {
     // I go to postico, and figure out how to add a song in general
     // Once it works postico, I copy it to my string
 
-    const rank = Number(req.body.rank);
-    const artist = req.body.artist;
-    const track = req.body.track;
-    const published = req.body.published;
+    const toDo = req.body.toDo;
+    const completed = req.body.completed;
+   
+    
 
     // NEVER, NEVER, NEVER DO THIS
     // Never send data from the client
@@ -72,8 +72,8 @@ router.post('/', (req, res) => {
     // We put SQL variables into it
     // When we use input sanitization, we can take the quotes off of our SQL variables
         const queryText = `
-                    INSERT INTO "songs" 
-	                    ("rank", "artist", "track", "published") 
+                    INSERT INTO "tasks" 
+	                    ("toDo", "completed", "deleteTask") 
                     VALUES
 	                    ($1, $2, $3, $4);
                     `;
@@ -88,6 +88,8 @@ router.post('/', (req, res) => {
             console.log('db insert response failed', error);
             res.sendStatus(500);
         });
+    });
+
 
 // POST
 
