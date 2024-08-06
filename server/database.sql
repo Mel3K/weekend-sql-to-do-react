@@ -1,6 +1,6 @@
 CREATE TABLE "task" (
   "id" serial primary key,
-  "task" varchar,
+  "task"varchar,
   "completed" true,
 );
 

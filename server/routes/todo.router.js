@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
     // Write a query to get the task
     // Often we write these in Postico, and we test them there
     // Then we copy them here, and turn them into strings.
-    let queryText = 'SELECT * FROM "task";';
+    let queryText = `SELECT * FROM "task";`;
 
     // Send that query to the DB (database)
     pool.query(queryText)
@@ -35,7 +35,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     console.log('req.body', req.body);
-    task.push(req.body);
+  
     res.sendStatus(200);
     // When the client sends us a new song
     // We want our server to send it to the database
@@ -50,7 +50,11 @@ router.post('/', (req, res) => {
 
     const toDo = req.body.toDo;
     const completed = req.body.completed;
-   
+    const queryText = `
+    INSERT INTO "task" 
+    ("name", "description", "pic")
+VALUES
+($1, $2, $3);`;
     
 
     // NEVER, NEVER, NEVER DO THIS
@@ -73,13 +77,12 @@ router.post('/', (req, res) => {
     // When we use input sanitization, we can take the quotes off of our SQL variables
         const queryText = `
                     INSERT INTO "tasks" 
-	                    ("toDo", "completed", "deleteTask") 
+	                    ("toDo", "complete" ) 
                     VALUES
-	                    ($1, $2, $3, $4);
-                    `;
+	                    ($1, $2;                    `;
 
         // We have PG fill in the SQl variables for us
-        pool.query(queryText, [rank, artist, track, published])
+        pool.query(queryText, [toDo,completed])
         .then(result => {
             console.log('db insert response successful:', result);
             res.sendStatus(201);
@@ -96,5 +99,22 @@ router.post('/', (req, res) => {
 // PUT
 
 // DELETE
-
+router.delete('/:id',(req,res) => {
+    const idToDelete = req.params.id;
+ 
+     console.log(`Delete request for id`, idToDelete);
+ 
+         const queryText =`DELETE FROM "task" WHERE "id" = $1;`;
+         pool.query(queryText, [idToDelete])
+         .then(result => {
+             console.log(`task with id: ${idToDelete} successful and deleted`);
+             res.sendStatus(200);
+             
+         })
+         .catch((error) => {
+             console.log(`failed to delete task with id: ${idToDelete}, Error: ${error}`, error);
+                 res.sendStatus(500); //you should always respond
+ 
+         })
+   })
 module.exports = router;
