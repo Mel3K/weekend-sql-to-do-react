@@ -40,21 +40,20 @@ router.post('/', (req, res) => {
     // When the client sends us a new song
     // We want our server to send it to the database
 
-    const newTask = req.body;
 
     // I want to write a query to insert the new song into the database
 
-    // Even though I want to add a specific new song
-    // I go to postico, and figure out how to add a song in general
+    // Even though I want to add a specific new task
+    // I go to postico, and figure out how to add a todo in general
     // Once it works postico, I copy it to my string
 
     const toDo = req.body.toDo;
     const completed = req.body.completed;
-    const queryText = `
-    INSERT INTO "task" 
-    ("name", "description", "pic")
+    const queryText = `INSERT INTO "tasks" 
+    ("toDo", "complete" ) 
 VALUES
-($1, $2, $3);`;
+    ($1, $2);`;
+
     
 
     // NEVER, NEVER, NEVER DO THIS
@@ -74,12 +73,7 @@ VALUES
     // For the query, you do almost the same thing
     // We don't put javascript variables into it
     // We put SQL variables into it
-    // When we use input sanitization, we can take the quotes off of our SQL variables
-        const queryText = `
-                    INSERT INTO "tasks" 
-	                    ("toDo", "complete" ) 
-                    VALUES
-	                    ($1, $2;                    `;
+    // When we use input sanitization, we can take the quotes off of our SQL variables                  `;
 
         // We have PG fill in the SQl variables for us
         pool.query(queryText, [toDo,completed])

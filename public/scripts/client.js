@@ -11,8 +11,3 @@ const completeButton = document.createElement('button');
     });
     const deleteButton = document.createElement ('button');
     deleteButton.textContent =('delete');
-
-    )
-
-    )
-)
