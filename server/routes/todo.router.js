@@ -18,6 +18,7 @@ router.get('/', (req, res) => {
     // Send that query to the DB (database)
     pool.query(queryText)
         .then((result) => {
+            console.log('got stuff sent back from db', result);
             // The response is a big old ugly object
             // with lots of extra info
             // the info we care about is in result.rows
@@ -29,9 +30,9 @@ router.get('/', (req, res) => {
             console.log(`Error making query: ${queryText}`, error);
             // Never leave the client waiting
             res.sendStatus(500);
-        });
+        })
 
-});
+})
 
 router.post('/', (req, res) => {
     console.log('req.body', req.body);
@@ -49,8 +50,8 @@ router.post('/', (req, res) => {
 
     const toDo = req.body.toDo;
     const completed = req.body.completed;
-    const queryText = `INSERT INTO "tasks" 
-    ("toDo", "complete" ) 
+    const queryText = `INSERT INTO "task" 
+    (toDo, complete ) 
 VALUES
     ($1, $2);`;
 
@@ -76,7 +77,7 @@ VALUES
     // When we use input sanitization, we can take the quotes off of our SQL variables                  `;
 
         // We have PG fill in the SQl variables for us
-        pool.query(queryText, [toDo,completed])
+        pool.query(queryText, [toDo.toDo,todo.completed])
         .then(result => {
             console.log('db insert response successful:', result);
             res.sendStatus(201);
@@ -84,14 +85,30 @@ VALUES
         .catch(error => {
             console.log('db insert response failed', error);
             res.sendStatus(500);
-        });
+        })
     });
 
 
 // POST
 
 // PUT
-
+router.put('/toggle/:id', (req, res) => {
+    let { id } = req.params;
+    // This query will switch from true to false and false to true
+    const sqlText = `
+        UPDATE "task" SET "done" = NOT "done" 
+        WHERE "id" = $1;
+    `;
+    pool.query(sqlText, [id])
+        .then((result) => {
+            console.log(`Got stuff back from the database`, result);
+            res.sendStatus(201);
+        })
+        .catch((error) => {
+            console.log(`Error making database query ${sqlText}`, error);
+            res.sendStatus(500); // Good server always responds
+        })
+});
 // DELETE
 router.delete('/:id',(req,res) => {
     const idToDelete = req.params.id;
