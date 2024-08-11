@@ -3,16 +3,16 @@ import axios from 'axios';
 
 function App () {
   const [todoList, setTodoList] = useState ([]);
-  const [newTask, setNewTask] = useState ('');
+  const [newTodo, setNewTodo] = useState ('');
   const [completed, setCompleted] = useState ('');
 
 useEffect(() => {
-  fetchTodoList();
+  fetchTodo();
 
 }, [])
 
-const fetchTodoList = () => {
-  axios.get('/api/todoList')
+const fetchTodo = () => {
+  axios.get('/api/todo')
       .then((response) => {
         console.log(response.data);
         // Then we update our react variable to match.
@@ -24,12 +24,12 @@ const fetchTodoList = () => {
       })
   }
 }
-const addTask = (event) => {
+const addTodo = (event) => {
   // We hit submit in a form, so we need to stop the page refreshing
   event.preventDefault();
 
   // We pack up our data
-  const newTask = {
+  const newTodo = {
     todo: newTodo,
     completed: newCompleted
   }
@@ -51,7 +51,7 @@ const addTask = (event) => {
     })
 }
 
-const deleteTodo = (toDoId => {
+const deleteTodo = (toDoId) => {
 
   axios.delete(`/api/todo/${todoId}`)
     .then((response) => {
@@ -91,7 +91,7 @@ const deleteTodo = (toDoId => {
             // We started out using creature.name, but once we introduced the server we can change it to
             // creature.id, which is guarenteed to be truely unique.
             return (
-              <li key={todo.id}>{todo.task} is done {todo.completed}
+              <li key={todo.id}>{todo.todo} is done {todo.completed}
                 <button onClick={() => {toggleTask(todo.id)}}>
                   {todo.completed ? 'Completed' : 'NotCompleted' }
                 </button>
@@ -109,6 +109,6 @@ const deleteTodo = (toDoId => {
   );
 
 }
-)
+
 
 export default App

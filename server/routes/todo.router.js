@@ -5,16 +5,17 @@ const pool = require('../modules/pool.js');
 // GET
 
 router.get('/', (req, res) => {
-    res.send(task);
-    // When the clients asks for the task
-    // We need to reach out to the database for the songs
+   
+    // When the clients asks for the to do item
+    // We need to reach out to the database for that todo 
     // and then send them to the client.
 
     // Write a query to get the task
     // Often we write these in Postico, and we test them there
     // Then we copy them here, and turn them into strings.
-    let queryText = `SELECT * FROM "tasks";`;
+   const queryText = `SELECT * FROM "tasks";`;
 
+   
     // Send that query to the DB (database)
     pool.query(queryText)
         .then((result) => {
@@ -40,7 +41,7 @@ router.post('/', (req, res) => {
     res.sendStatus(200);
     // When the client sends us a new song
     // We want our server to send it to the database
-
+    const todo = req.body.todo;
 
     // I want to write a query to insert the new song into the database
 
@@ -48,7 +49,7 @@ router.post('/', (req, res) => {
     // I go to postico, and figure out how to add a todo in general
     // Once it works postico, I copy it to my string
 
-    const toDo = req.body.toDo;
+   
     const completed = req.body.completed;
     const queryText = `INSERT INTO "tasks" 
     (todo, completed ) 
