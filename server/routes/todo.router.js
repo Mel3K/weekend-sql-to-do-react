@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
     // Write a query to get the task
     // Often we write these in Postico, and we test them there
     // Then we copy them here, and turn them into strings.
-    let queryText = `SELECT * FROM "task";`;
+    let queryText = `SELECT * FROM "tasks";`;
 
     // Send that query to the DB (database)
     pool.query(queryText)
@@ -50,8 +50,8 @@ router.post('/', (req, res) => {
 
     const toDo = req.body.toDo;
     const completed = req.body.completed;
-    const queryText = `INSERT INTO "task" 
-    (toDo, complete ) 
+    const queryText = `INSERT INTO "tasks" 
+    (todo, completed ) 
 VALUES
     ($1, $2);`;
 
@@ -77,7 +77,7 @@ VALUES
     // When we use input sanitization, we can take the quotes off of our SQL variables                  `;
 
         // We have PG fill in the SQl variables for us
-        pool.query(queryText, [toDo.toDo,todo.completed])
+        pool.query(queryText, [todo, completed])
         .then(result => {
             console.log('db insert response successful:', result);
             res.sendStatus(201);
@@ -96,7 +96,7 @@ router.put('/toggle/:id', (req, res) => {
     let { id } = req.params;
     // This query will switch from true to false and false to true
     const sqlText = `
-        UPDATE "task" SET "done" = NOT "done" 
+        UPDATE "tasks" SET "done" = NOT "done" 
         WHERE "id" = $1;
     `;
     pool.query(sqlText, [id])
@@ -115,7 +115,7 @@ router.delete('/:id',(req,res) => {
  
      console.log(`Delete request for id`, idToDelete);
  
-         const queryText =`DELETE FROM "task" WHERE "id" = $1;`;
+         const queryText =`DELETE FROM "tasks" WHERE "id" = $1;`;
          pool.query(queryText, [idToDelete])
          .then(result => {
              console.log(`task with id: ${idToDelete} successful and deleted`);

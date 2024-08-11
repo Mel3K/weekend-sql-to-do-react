@@ -1,9 +1,11 @@
-CREATE TABLE "task" (
-  "id" serial primary key,
-  "task"varchar,
-  "completed" true,
+CREATE TABLE "tasks" (
+  "id" SERIAL PRIMARY KEY,
+  "task" VARCHAR(80),
+  "completed" BOOLEAN,
 );
 
-INSERT INTO "task" 
+INSERT INTO "tasks" 
 	("task", "completed")
 VALUES ('vacuum', 'true');
+
+DROP TABLE "treats";
