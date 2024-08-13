@@ -41,7 +41,8 @@ router.post('/', (req, res) => {
     res.sendStatus(200);
     // When the client sends us a new song
     // We want our server to send it to the database
-    const todo = req.body.todo;
+    const task = req.body;
+
 
     // I want to write a query to insert the new song into the database
 
@@ -49,8 +50,6 @@ router.post('/', (req, res) => {
     // I go to postico, and figure out how to add a todo in general
     // Once it works postico, I copy it to my string
 
-   
-    const completed = req.body.completed;
     const queryText = `INSERT INTO "tasks" 
     (todo, completed ) 
 VALUES
@@ -78,7 +77,7 @@ VALUES
     // When we use input sanitization, we can take the quotes off of our SQL variables                  `;
 
         // We have PG fill in the SQl variables for us
-        pool.query(queryText, [todo, completed])
+        pool.query(queryText, [task.todo, task.completed])
         .then(result => {
             console.log('db insert response successful:', result);
             res.sendStatus(201);
@@ -98,8 +97,7 @@ router.put('/toggle/:id', (req, res) => {
     // This query will switch from true to false and false to true
     const sqlText = `
         UPDATE "tasks" SET "done" = NOT "done" 
-        WHERE "id" = $1;
-    `;
+        WHERE "id" = $1;`;
     pool.query(sqlText, [id])
         .then((result) => {
             console.log(`Got stuff back from the database`, result);

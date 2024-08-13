@@ -3,7 +3,7 @@ import axios from 'axios';
 
 function App () {
   const [todoList, setTodoList] = useState ([]);
-  const [newTodo, setNewTodo] = useState ('');
+  const [task, setTask] = useState ('');
   const [completed, setCompleted] = useState ('');
 
 useEffect(() => {
@@ -21,12 +21,16 @@ const fetchTodo = () => {
       })
       .catch((error) => {
         console.log(error);
-      })
+      });
   }
-}
+  fetchTodo();
+
+
 const addTodo = (event) => {
   // We hit submit in a form, so we need to stop the page refreshing
   event.preventDefault();
+  console.log('submitted')
+}
 
   // We pack up our data
   const newTodo = {
@@ -66,16 +70,10 @@ const deleteTodo = (toDoId) => {
     <div>
 
       <form onSubmit = {addTodo}>
-        {
-
-        }
+     
         <label htmlFor="item">Task to Add:</label>
-        {
 
-        }
-        {
-
-        }
+     
         <input id="item" onChange={(event) => setNewTodo(event.target.value)} value={newTodo} />
 
 <label htmlFor="done">Is Task Done:</label>
@@ -109,6 +107,12 @@ const deleteTodo = (toDoId) => {
   );
 
 }
+
+
+
+
+
+
 
 
 export default App
