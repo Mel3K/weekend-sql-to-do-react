@@ -5,7 +5,8 @@ const pool = require('../modules/pool.js');
 // GET
 
 router.get('/', (req, res) => {
-   
+   console.log('in get request');
+
     // When the clients asks for the to do item
     // We need to reach out to the database for that todo 
     // and then send them to the client.
@@ -19,7 +20,7 @@ router.get('/', (req, res) => {
     // Send that query to the DB (database)
     pool.query(queryText)
         .then((result) => {
-            console.log('got stuff sent back from db', result);
+            
             // The response is a big old ugly object
             // with lots of extra info
             // the info we care about is in result.rows
@@ -33,15 +34,23 @@ router.get('/', (req, res) => {
             res.sendStatus(500);
         })
 
-})
+});
 
 router.post('/', (req, res) => {
     console.log('req.body', req.body);
-  
+    const queryText = `INSERT INTO "tasks" 
+    ("todo", "completed" ) 
+VALUES ($1, $2);`;
+pool.query(queryText, [req.body.todo, req.body.completed])
+.then((result) => {
     res.sendStatus(200);
-    // When the client sends us a new song
+}).catch((err) => {
+    console.log(err);
+    res.sendStatus(500);
+})
+});    // When the client sends us a new song
     // We want our server to send it to the database
-    const task = req.body;
+  
 
 
     // I want to write a query to insert the new song into the database
@@ -50,10 +59,7 @@ router.post('/', (req, res) => {
     // I go to postico, and figure out how to add a todo in general
     // Once it works postico, I copy it to my string
 
-    const queryText = `INSERT INTO "tasks" 
-    (todo, completed ) 
-VALUES
-    ($1, $2);`;
+ 
 
     
 
@@ -77,16 +83,7 @@ VALUES
     // When we use input sanitization, we can take the quotes off of our SQL variables                  `;
 
         // We have PG fill in the SQl variables for us
-        pool.query(queryText, [task.todo, task.completed])
-        .then(result => {
-            console.log('db insert response successful:', result);
-            res.sendStatus(201);
-        })
-        .catch(error => {
-            console.log('db insert response failed', error);
-            res.sendStatus(500);
-        })
-    });
+
 
 
 // POST
@@ -109,13 +106,14 @@ router.put('/toggle/:id', (req, res) => {
         })
 });
 // DELETE
-router.delete('/:id',(req,res) => {
-    const idToDelete = req.params.id;
+router.delete('/:id', (req,res) => {
+   let { id } = req.params;
+
  
-     console.log(`Delete request for id`, idToDelete);
+     console.log(`Delete request for id`);
  
          const queryText =`DELETE FROM "tasks" WHERE "id" = $1;`;
-         pool.query(queryText, [idToDelete])
+         pool.query(queryText, [id])
          .then(result => {
              console.log(`task with id: ${idToDelete} successful and deleted`);
              res.sendStatus(200);
@@ -124,7 +122,6 @@ router.delete('/:id',(req,res) => {
          .catch((error) => {
              console.log(`failed to delete task with id: ${idToDelete}, Error: ${error}`, error);
                  res.sendStatus(500); //you should always respond
- 
          })
-   })
+   });
 module.exports = router;

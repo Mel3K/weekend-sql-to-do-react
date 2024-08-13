@@ -22,30 +22,24 @@ const fetchTodo = () => {
       .catch((error) => {
         console.log(error);
       });
-  }
-  fetchTodo();
+}
 
 
 const addTodo = (event) => {
   // We hit submit in a form, so we need to stop the page refreshing
-  event.preventDefault();
-  console.log('submitted')
-}
-
-  // We pack up our data
   const newTodo = {
-    todo: newTodo,
-    completed: newCompleted
+    todo: 'task',
+    completed: 'completed'
   }
-
-  // We send it to the server
+  event.preventDefault();
+  console.log('submitted');
   axios.post('/api/todo', newTodo)
     .then((response) => {
       console.log(response);
 
       // Clear out the inputs, for the next creature to be added.
-      setNewTodo('');
-      setNewCompleted('');
+      setTask('');
+      setCompleted('');
 
       // Fetch the updated list from the server
       fetchTodo();
@@ -55,7 +49,16 @@ const addTodo = (event) => {
     })
 }
 
-const deleteTodo = (toDoId) => {
+
+
+  // We pack up our data
+
+
+
+  // We send it to the server
+
+
+  const deleteTodo = (todoId) => {
 
   axios.delete(`/api/todo/${todoId}`)
     .then((response) => {
@@ -66,18 +69,32 @@ const deleteTodo = (toDoId) => {
       console.log(error);
     })
 
+    const toggleTask = (initialState) => {
+      const [toggleValue, setToggleValue] = useState(initialState);
+      const toggler = () => { setToggleValue(!toggleValue) };
+      return [toggleValue, toggler]
+    };
+
+
+
+    //axios.put(`api/todo/${todoId}`)
+    //.then()
+
+  }
+
   return (
     <div>
+        <h1>TO DO APP</h1>
 
       <form onSubmit = {addTodo}>
      
         <label htmlFor="item">Task to Add:</label>
 
      
-        <input id="item" onChange={(event) => setNewTodo(event.target.value)} value={newTodo} />
+        <input id="item" onChange={(event) => setTask(event.target.value)} value={task} />
 
 <label htmlFor="done">Is Task Done:</label>
-<input id="done" onChange={(event) => setNewTodo(event.target.value)} value={newTodo} />
+        <input id="done" onChange={(event) => setCompleted(event.target.value)} value={completed} />
 
 <button type="submit">Add New Task</button>
       </form>
@@ -89,12 +106,12 @@ const deleteTodo = (toDoId) => {
             // We started out using creature.name, but once we introduced the server we can change it to
             // creature.id, which is guarenteed to be truely unique.
             return (
-              <li key={todo.id}>{todo.todo} is done {todo.completed}
-                <button onClick={() => {toggleTask(todo.id)}}>
+              <li key={todo.id}>{todo.task} is done {todo.completed}
+                <button id="done" onClick={() => { toggleTask(todo.id) }}>
                   {todo.completed ? 'Completed' : 'NotCompleted' }
                 </button>
-                <button onClick={() => deleteTodo(todo.id)}>
-                  🗑️
+                <button id="del" onClick={() => deleteTodo(todo.id)}>
+                  🗑️ Trash Me
                 </button>
               </li>);
           }
@@ -102,16 +119,11 @@ const deleteTodo = (toDoId) => {
       </ul>
 
   
-      <h1>TO DO APP</h1>
+    
     </div>
   );
 
 }
-
-
-
-
-
 
 
 
