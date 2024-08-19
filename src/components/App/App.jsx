@@ -2,12 +2,12 @@ import {useEffect, useState} from 'react';
 import axios from 'axios';
 
 function App () {
-  const [todoList, setTodoList] = useState ([]);
+  const [todoList, setTodoList] = useState ([]);   
   const [task, setTask] = useState ('');
   const [completed, setCompleted] = useState ('');
 
 useEffect(() => {
-  fetchTodo();
+fetchTodo();
 
 }, [])
 
@@ -26,12 +26,16 @@ const fetchTodo = () => {
 
 
 const addTodo = (event) => {
+  event.preventDefault();
+
   // We hit submit in a form, so we need to stop the page refreshing
+  console.log(event);
+
   const newTodo = {
-    todo: 'task',
+   task: 'task',
     completed: 'completed'
   }
-  event.preventDefault();
+
   console.log('submitted');
   axios.post('/api/todo', newTodo)
     .then((response) => {
@@ -49,31 +53,56 @@ const addTodo = (event) => {
     })
 }
 
+const toggleTask = (todoId) => {
+  console.log('in toggele');
+axios.put(`/api/todo/toggle/${todoId}`)
+.then((response) => {
+  console.log(response);
+})
+}
+const toggleIfDone = (todo) => {
+  if (todo.isDone) {
+    axios.put(`/api/todo/ifDone/${todo.id}`, {
+      ifDone: true })
+      .then((response) => {
+        console.log(response);
+        fetchTodo();
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+    } else { 
+      axios.put(`/api/creature/ifDone/${todo.id}`, {
+        ifDone: false})
+        .then((response) => {
+          console.log(response);
+          fetchTodo();
+        })
+      }
+    }
 
-
+  
   // We pack up our data
-
-
 
   // We send it to the server
 
 
-  const deleteTodo = (todoId) => {
+  // const deleteTodo = (todo.Id) => {
 
-  axios.delete(`/api/todo/${todoId}`)
-    .then((response) => {
-      console.log(response);
-      fetchTodo();
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+  // axios.delete(`/api/todo/${todo.Id}`)
+  //   .then((response) => {
+  //     console.log(response);
+  //     fetchTodo();
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   })
 
-    const toggleTask = (initialState) => {
-      const [toggleValue, setToggleValue] = useState(initialState);
-      const toggler = () => { setToggleValue(!toggleValue) };
-      return [toggleValue, toggler]
-    };
+    // const toggleTask = (initialState) => {
+    //   const [toggleValue, setToggleValue] = useState(initialState);
+    //   const toggler = () => { setToggleValue(!toggleValue) };
+    //   return [toggleValue, toggler]
+    // };
 
 
 
@@ -86,15 +115,15 @@ const addTodo = (event) => {
     <div>
         <h1>TO DO APP</h1>
 
-      <form onSubmit = {addTodo}>
+      <form onSubmit ={addTodo}>
      
-        <label htmlFor="item">Task to Add:</label>
+        <label htmlFor="task">Task to Add:`</label>
 
      
-        <input id="item" onChange={(event) => setTask(event.target.value)} value={task} />
+        <input id="task" onChange={(event) => setTask(event.target.value)} value = {task} />
 
-<label htmlFor="done">Is Task Done:</label>
-        <input id="done" onChange={(event) => setCompleted(event.target.value)} value={completed} />
+<label htmlFor="completed">Is Task Done:</label>
+        <input id="completed" onChange={(event) => setCompleted(event.target.value)} value={completed} />
 
 <button type="submit">Add New Task</button>
       </form>
@@ -123,7 +152,7 @@ const addTodo = (event) => {
     </div>
   );
 
-}
+
 
 
 
