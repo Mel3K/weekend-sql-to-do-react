@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../modules/pool.js');
+const { Query } = require('pg');
 
 // GET
 
@@ -40,8 +41,8 @@ router.post('/', (req, res) => {
     console.log('req.body', req.body);
     const queryText = `INSERT INTO "tasks" 
     ("todo", "completed" ) 
-VALUES ($1, $2);`;
-pool.query(queryText, [req.body.todo, req.body.completed])
+VALUES ($1, FALSE);`;
+pool.query(queryText, [req.body.rubberDucky])
 .then((result) => {
     res.sendStatus(200);
 }).catch((err) => {
@@ -93,7 +94,7 @@ router.put('/toggle/:id', (req, res) => {
     let { id } = req.params;
     // This query will switch from true to false and false to true
     const sqlText = `
-        UPDATE "tasks" SET "done" = NOT "done" 
+        UPDATE "tasks" SET "completed" = NOT "completed" 
         WHERE "id" = $1;`;
     pool.query(sqlText, [id])
         .then((result) => {
@@ -115,12 +116,12 @@ router.delete('/:id', (req,res) => {
          const queryText =`DELETE FROM "tasks" WHERE "id" = $1;`;
          pool.query(queryText, [id])
          .then(result => {
-             console.log(`task with id: ${idToDelete} successful and deleted`);
+             console.log(`task with id: ${[id]} successful and deleted`);
              res.sendStatus(200);
              
          })
          .catch((error) => {
-             console.log(`failed to delete task with id: ${idToDelete}, Error: ${error}`, error);
+             console.log(`failed to delete task with id: ${queryText}, Error: ${error}`, error);
                  res.sendStatus(500); //you should always respond
          })
    });

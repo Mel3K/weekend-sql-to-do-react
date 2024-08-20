@@ -1,15 +1,22 @@
 .App {
+  
+  text-decoration-color: blueviolet;
   text-align: center;
 }
-
+.completed {background-color: coral
+  }
 .App-header {
-  background-color: #222;
+  background-color: #da8d8d;
   height: 70px;
   padding: 20px;
   color: white;
 }
+h2 {
+  color: blue;
+}
 
 .App-title {
+  color:blue;
   font-size: 1.5em;
 }
 

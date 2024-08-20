@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import axios from 'axios';
+import './App.css';
 
 function App () {
   const [todoList, setTodoList] = useState ([]);   
@@ -27,14 +28,15 @@ const fetchTodo = () => {
 
 const addTodo = (event) => {
   event.preventDefault();
-console.log(`the task to add is ${task}  is it completed? ${completed}`);
+console.log(`the task to add is ${task}`);
 
   // We hit submit in a form, so we need to stop the page refreshing
   console.log(event);
 
+  // Note, pack up the acutal user input, for now we are hard coding 'task' and 'complete'
   const newTodo = {
-   task: 'task',
-    completed: 'completed'
+    rubberDucky: task,
+    // completed: completed
   }
 
   console.log('submitted');
@@ -44,7 +46,7 @@ console.log(`the task to add is ${task}  is it completed? ${completed}`);
 
       // Clear out the inputs, for the next creature to be added.
       setTask('');
-      setCompleted('');
+    
 
       // Fetch the updated list from the server
       fetchTodo();
@@ -59,6 +61,8 @@ const toggleTask = (todoId) => {
 axios.put(`/api/todo/toggle/${todoId}`)
 .then((response) => {
   console.log(response);
+  fetchTodo();
+  
 })
 }
 const toggleIfDone = (todo) => {
@@ -73,7 +77,7 @@ const toggleIfDone = (todo) => {
         console.log(error);
       })
     } else { 
-      axios.put(`/api/creature/ifDone/${todo.id}`, {
+      axios.put(`/api/todo/ifDone/${todo.id}`, {
         ifDone: false})
         .then((response) => {
           console.log(response);
@@ -88,17 +92,17 @@ const toggleIfDone = (todo) => {
   // We send it to the server
 
 
-  // const deleteTodo = (todo.Id) => {
+  const deleteTodo = (idTodelete) => {
 
-  // axios.delete(`/api/todo/${todo.Id}`)
-  //   .then((response) => {
-  //     console.log(response);
-  //     fetchTodo();
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   })
-
+  axios.delete(`/api/todo/${idTodelete}`)
+    .then((response) => {
+      console.log(response);
+      fetchTodo();
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
     // const toggleTask = (initialState) => {
     //   const [toggleValue, setToggleValue] = useState(initialState);
     //   const toggler = () => { setToggleValue(!toggleValue) };
@@ -114,17 +118,19 @@ const toggleIfDone = (todo) => {
 
   return (
     <div>
-        <h1>TO DO APP</h1>
+        <h1>This is the TODO App</h1>
 
       <form onSubmit ={addTodo}>
+       
+
      
         <label htmlFor="task">New Task:</label>
 
      
         <input id="task" onChange={(event) => setTask(event.target.value)} value = {task} />
 
-<label htmlFor="completed">Complete:</label>
-        <input id="completed" onChange={(event) => setCompleted(event.target.value)} value={completed} />
+{/* <label htmlFor="completed">Complete:</label>
+        <input id="completed" onChange={(event) => setCompleted(event.target.value)} value={completed} /> */}
 
 <button type="submit">Add New Task</button>
       </form>
@@ -136,9 +142,11 @@ const toggleIfDone = (todo) => {
             // We started out using creature.name, but once we introduced the server we can change it to
             // creature.id, which is guarenteed to be truely unique.
             return (
-              <li key={todo.id}>{todo.task}  {todo.completed}
+              
+              <li key={todo.id}>{todo.todo}
                 <button id="done" onClick={() => { toggleTask(todo.id) }}>
                   {todo.completed ? 'Completed' : 'NotCompleted' }
+               
                 </button>
                 <button id="del" onClick={() => deleteTodo(todo.id)}>
                   🗑️ Trash Me
