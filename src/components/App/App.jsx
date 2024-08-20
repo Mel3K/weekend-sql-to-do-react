@@ -109,7 +109,7 @@ const toggleIfDone = (todo) => {
     //axios.put(`api/todo/${todoId}`)
     //.then()
 
-  }
+  
 
   return (
     <div>
@@ -117,12 +117,12 @@ const toggleIfDone = (todo) => {
 
       <form onSubmit ={addTodo}>
      
-        <label htmlFor="task">Task to Add:`</label>
+        <label htmlFor="task">New Task:</label>
 
      
         <input id="task" onChange={(event) => setTask(event.target.value)} value = {task} />
 
-<label htmlFor="completed">Is Task Done:</label>
+<label htmlFor="completed">Complete:</label>
         <input id="completed" onChange={(event) => setCompleted(event.target.value)} value={completed} />
 
 <button type="submit">Add New Task</button>
@@ -135,7 +135,7 @@ const toggleIfDone = (todo) => {
             // We started out using creature.name, but once we introduced the server we can change it to
             // creature.id, which is guarenteed to be truely unique.
             return (
-              <li key={todo.id}>{todo.task} is done {todo.completed}
+              <li key={todo.id}>{todo.task}  {todo.completed}
                 <button id="done" onClick={() => { toggleTask(todo.id) }}>
                   {todo.completed ? 'Completed' : 'NotCompleted' }
                 </button>
@@ -152,6 +152,7 @@ const toggleIfDone = (todo) => {
     </div>
   );
 
+}
 
 
 
