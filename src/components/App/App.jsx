@@ -27,6 +27,7 @@ const fetchTodo = () => {
 
 const addTodo = (event) => {
   event.preventDefault();
+console.log(`the task to add is ${task}  is it completed? ${completed}`);
 
   // We hit submit in a form, so we need to stop the page refreshing
   console.log(event);
