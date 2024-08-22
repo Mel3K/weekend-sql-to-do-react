@@ -143,7 +143,17 @@ const toggleIfDone = (todo) => {
             // creature.id, which is guarenteed to be truely unique.
             return (
               
-              <li key={todo.id}>{todo.todo}
+              <li key={todo.id}>
+
+                {
+                  // Conditional rendering
+                  todo.completed ? (
+                    <p className="completed">{todo.todo}</p>
+                  ) : (
+                    <p>{todo.todo}</p>
+                  )
+                }
+
                 <button id="done" onClick={() => { toggleTask(todo.id) }}>
                   {todo.completed ? 'Completed' : 'NotCompleted' }
                
